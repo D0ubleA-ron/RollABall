@@ -4,6 +4,7 @@ public class BallController : MonoBehaviour
 {
     [SerializeField] private Rigidbody sphereRigidbody;
     [SerializeField] private float ballSpeed = 2f;
+    public bool grounded;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,9 +31,20 @@ public class BallController : MonoBehaviour
         {
             inputVector += Vector2.right;
         }
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        {
+            sphereRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+        }
+        
         Vector3 inputXZPlane = new Vector3(inputVector.x,0,inputVector.y);
         sphereRigidbody.AddForce(inputXZPlane * ballSpeed);
         Debug.Log("Resultant Vector: " + inputVector);
         Debug.Log("Resultant 3D Vector: " + inputXZPlane);
+    }
+
+    private bool IsGrounded()
+    {
+        grounded = Physics.Raycast(transform.position, -Vector3.up, 0.6f);
+        return grounded;
     }
 }
